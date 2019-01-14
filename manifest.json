@@ -1,0 +1,11 @@
+{
+    "display_name": "Coinsplitter Plugin",
+    "version": "1.0",
+    "description": "Coinsplitter Plugin",
+    "project_url": "https://github.com/KarolTrzeszczkowski/Electron-Cash-Plugin-Coinsplitter Plugin/",
+    "minimum_ec_version": "3.2",
+    "package_name": "coinsplitter-plugin",
+    "available_for": [
+        "qt"
+    ]
+}
