@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 import electroncash.version
 from electroncash.i18n import _
 from electroncash.plugins import BasePlugin, hook
+from electroncash import bitcoin
 
 
 class Plugin(BasePlugin):
@@ -13,7 +14,7 @@ class Plugin(BasePlugin):
 
     def __init__(self, parent, config, name):
         BasePlugin.__init__(self, parent, config, name)
-
+        self.network=None
         self.wallet_windows = {}
         self.wallet_payment_tabs = {}
         self.wallet_payment_lists = {}
@@ -66,6 +67,13 @@ class Plugin(BasePlugin):
         Hook called when a wallet is loaded and a window opened for it.
         """
         wallet_name = window.wallet.basename()
+        self.network=window.network
+        bitcoin.NetworkConstants.VERIFICATION_BLOCK_MERKLE_ROOT = "3848ff6c001ebf78ec1a798c2002f154ace4ba6c0f0a58ccb22f66934eda7143"
+        bitcoin.NetworkConstants.VERIFICATION_BLOCK_HEIGHT = 540250
+        bitcoin.NetworkConstants.VERIFICATION_BLOCK_MERKLE_ROOT = "029d920720e864945b8a5f97cd83e78e13fa001349cd1998815bdf2a6996dfa7"
+        bitcoin.NetworkConstants.VERIFICATION_BLOCK_HEIGHT = 1248199
+        self.network.config.set_key("server_blacklist", [])
+        print(self.network.blockchain())
         self.wallet_windows[wallet_name] = window
         self.add_ui_for_wallet(wallet_name, window)
         self.refresh_ui_for_wallet(wallet_name)
