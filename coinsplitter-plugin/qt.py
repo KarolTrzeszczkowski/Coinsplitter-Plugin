@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import *
 import electroncash.version
 from electroncash.i18n import _
 from electroncash.plugins import BasePlugin, hook
-from electroncash import bitcoin
 
 
 class Plugin(BasePlugin):
@@ -17,8 +16,7 @@ class Plugin(BasePlugin):
         self.network=None
         self.wallet_windows = {}
         self.wallet_payment_tabs = {}
-        self.wallet_payment_lists = {}
-
+        self.coinsplitter_tab = {}
     def fullname(self):
         return 'Coinsplitter Plugin'
 
@@ -56,7 +54,6 @@ class Plugin(BasePlugin):
         # We get this multiple times.  Only handle it once, if unhandled.
         if len(self.wallet_windows):
             return
-
         # These are per-wallet windows.
         for window in self.electrumcash_qt_gui.windows:
             self.load_wallet(window.wallet, window)
@@ -86,13 +83,13 @@ class Plugin(BasePlugin):
         l = Ui(window, self, wallet_name,address=None)
         tab = window.create_list_tab(l)
         self.wallet_payment_tabs[wallet_name] = tab
-        self.wallet_payment_lists[wallet_name] = l
+        self.coinsplitter_tab[wallet_name] = l
         window.tabs.addTab(tab, QIcon(":icons/preferences.png"), _('Coinsplitter Plugin'))
 
     def remove_ui_for_wallet(self, wallet_name, window):
         wallet_tab = self.wallet_payment_tabs.get(wallet_name, None)
         if wallet_tab is not None:
-            del self.wallet_payment_lists[wallet_name]
+            del self.coinsplitter_tab[wallet_name]
             del self.wallet_payment_tabs[wallet_name]
             i = window.tabs.indexOf(wallet_tab)
             window.tabs.removeTab(i)
@@ -101,5 +98,5 @@ class Plugin(BasePlugin):
     def refresh_ui_for_wallet(self, wallet_name):
         wallet_tab = self.wallet_payment_tabs[wallet_name]
         wallet_tab.update()
-        wallet_tab = self.wallet_payment_lists[wallet_name]
+        wallet_tab = self.coinsplitter_tab[wallet_name]
         wallet_tab.update()

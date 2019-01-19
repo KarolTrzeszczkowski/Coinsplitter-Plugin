@@ -24,7 +24,12 @@ class Ui(QDialog, MessageBoxMixin):
         self.wallet_name = wallet_name
         self.config = parent.config
         self.password=None
-        #self.password=parent.password_dialog()
+        if self.wallet.has_password():
+            self.main_window.show_error(_("Coinsplitter Plugin requires password. It will get access to your private keys."))
+            self.password = parent.password_dialog()
+            if not self.password:
+                return
+
         if address:
             self.fund_domain = [address]
             self.fund_change_address = address
