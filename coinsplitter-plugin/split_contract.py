@@ -2,7 +2,7 @@ from ecdsa.ecdsa import curve_secp256k1, generator_secp256k1
 from electroncash.bitcoin import ser_to_point, point_to_ser
 from electroncash.address import Address, Script, hash160, ScriptOutput
 import hashlib
-from .op_codes import OpCodes
+from electroncash.address import OpCodes
 
 
 def joinbytes(iterable):
@@ -121,13 +121,13 @@ class SplitContract:
             if txin['scriptSig'] == self.dummy_scriptsig_redeem:
                 script = [
                     len(sig), sig,
-                    OpCodes.OP_1,
+                    OpCodes.OP_1, # feeds OP_IF
                     0x4c, len(self.redeemscript), self.redeemscript,
                     ]
             elif txin['scriptSig'] == self.dummy_scriptsig_refund:
                 script = [
                     len(sig), sig,
-                    OpCodes.OP_0,
+                    OpCodes.OP_0, # goes to OP_ELSE
                     0x4c, len(self.redeemscript), self.redeemscript,
                     ]
             else:
